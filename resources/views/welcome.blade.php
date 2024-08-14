@@ -44,6 +44,8 @@
         </div>
       </nav>
 
+      {{ var_dump($form_1) }}
+
       <div class="container py-3">
         <div class="card">
             <div class="card-header">
@@ -53,42 +55,43 @@
                     <div class="progress-bar" style="width: 20%">20%</div>
                 </div>
             </div>
-            <form action="">
+            <form action="{{ route('store') }}" method="POST">
+                @csrf
                 <div class="card-body">
                     <h4>Pendaftaran Murid Baru 2024/2025</h4>
-                    <small>Form ini merupakan Form Pendaftaran untuk Murid kelas 7 SMP yang akan memulai Tahun Pelajaran pada Bulan Juli Tahun 2024</small>
+                    <small class="form-text text-muted">Form ini merupakan Form Pendaftaran untuk Murid kelas 7 SMP yang akan memulai Tahun Pelajaran pada Bulan Juli Tahun 2024</small>
                     <hr>
                     <div class="mb3">
-                        <label for="">Darimanakah Bapak/Ibu Mengetahui Sekolah Azhari Islamic School Lebak Bulus Jakarta? *</label>
-                        <select name="" id="" class="form-select" required>
+                        <label>Darimanakah Bapak/Ibu Mengetahui Sekolah Azhari Islamic School Lebak Bulus Jakarta? *</label>
+                        <select name="info_dari" id="" class="form-select" required>
                             <option value="">-- Pilih Opsi --</option>
-                            <option>Keluarga</option>
-                            <option>Teman/Kenalan</option>
-                            <option>Website</option>
-                            <option>IG</option>
-                            <option>FB</option>
-                            <option>Spanduk/Baliho</option>
-                            <option>Brosur Cetak</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Keluarga' ? : '' : '' }}>Keluarga</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Teman/Kenalan' ? : '' : '' }}>Teman/Kenalan</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Website' ? : '' : '' }}>Website</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'IG' ? : '' : '' }}>IG</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'FB' ? : '' : '' }}>FB</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Spanduk/Baliho' ? : '' : '' }}>Spanduk/Baliho</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Brosur Cetak' ? : '' : '' }}>Brosur Cetak</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="">
+                        <label>
                             Sebutkan nama Bapak/Ibu yang memberikan rekomendasi kepada Saudara sehingga Saudara mendaftar di Azhari Lebak Bulus Jakarta
                         </label>
-                        <input type="text" class="form-control">
+                        <input type="text" name="referensi" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="">Tahun Pelajaran *</label>
-                        <input type="text" class="form-control" required maxlength="10">
-                        <small id="tahunPelajaranHelp" class="form-text text-muted">Contoh: 2024/2025</small>
+                        <label>Tahun Pelajaran *</label>
+                        <input type="text" name="tahun_pelajaran" class="form-control" required maxlength="10">
+                        <small class="form-text text-muted">Contoh: 2024/2025</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Jenjang Yang Diminati *</label>
-                        <select name="" id="" class="form-select">
+                        <label>Jenjang Yang Diminati *</label>
+                        <select name="jenjang_tujuan" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
-                            <option value="">SD</option>
-                            <option value="">SMP</option>
-                            <option value="">SMA</option>
+                            <option>SD</option>
+                            <option>SMP</option>
+                            <option>SMA</option>
                         </select>
                     </div>
                 </div>
@@ -105,27 +108,27 @@
                     <h4>Data Calon Murid</h4>
                     <hr>
                     <div class="mb-3">
-                        <label for="">Nama Lengkap *</label>
+                        <label>Nama Lengkap *</label>
                         <input type="text" class="form-control" placeholder="Nama Lengkap" required>
-                        <small>Masukkan Nama Lengkap Murid / Peserta PMB</small>
+                        <small class="form-text text-muted">Masukkan Nama Lengkap Murid / Peserta PMB</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Nama Panggilan *</label>
+                        <label>Nama Panggilan *</label>
                         <input type="text" class="form-control" placeholder="Nama Panggilan" required>
-                        <small>Masukkan Nama Panggilan Siswa / Peserta PMB</small>
+                        <small class="form-text text-muted">Masukkan Nama Panggilan Siswa / Peserta PMB</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Nomor Kartu Keluarga *</label>
+                        <label>Nomor Kartu Keluarga *</label>
                         <input type="text" class="form-control" required>
-                        <small>Masukkan Nomor Kartu Keluarga (KK) terdapat di bagian atas Kartu Keluarga (KK)</small>
+                        <small class="form-text text-muted">Masukkan Nomor Kartu Keluarga (KK) terdapat di bagian atas Kartu Keluarga (KK)</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">NIK *</label>
+                        <label>NIK *</label>
                         <input type="text" class="form-control" required>
-                        <small>Masukkan Nomor Induk Kependudukan Calon Siswa</small>
+                        <small class="form-text text-muted">Masukkan Nomor Induk Kependudukan Calon Siswa</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Jenis Kelamin *</label>
+                        <label>Jenis Kelamin *</label>
                         <select name="" id="" class="form-select" required>
                             <option value="">-- Pilih Opsi --</option>
                             <option>Laki-laki</option>
@@ -133,22 +136,22 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tempat Lahir *</label>
+                        <label>Tempat Lahir *</label>
                         <input type="text" class="form-control" required>
-                        <small>Masukkan Tempat Lahir Siswa/Peserta PSB</small>
+                        <small class="form-text text-muted">Masukkan Tempat Lahir Siswa/Peserta PSB</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tanggal Lahir *</label>
+                        <label>Tanggal Lahir *</label>
                         <input type="date" name="" id="" class="form-control" required>
-                        <small>Masukkan Tanggal Lahir Siswa/Peserta PSB</small>
+                        <small class="form-text text-muted">Masukkan Tanggal Lahir Siswa/Peserta PSB</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Anak ke *</label>
+                        <label>Anak ke *</label>
                         <input type="text" class="form-control" maxlength="20" required>
-                        <small>Contoh: 1 dari 2 bersaudara</small>
+                        <small class="form-text text-muted">Contoh: 1 dari 2 bersaudara</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Alamat Lengkap *</label>
+                        <label>Alamat Lengkap *</label>
                         <div class="row mb-3">
                             <div class="col">
                                 <input type="text" class="form-control" placeholder="Alamat 1" required>
@@ -169,12 +172,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="">Agama *</label>
+                        <label>Agama *</label>
                         <input type="text" class="form-control" required>
-                        <small>Contoh: Islam/Protestan/Katolik/dsb</small>
+                        <small class="form-text text-muted">Contoh: Islam/Protestan/Katolik/dsb</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Golongan Darah *</label>
+                        <label>Golongan Darah *</label>
                         <select name="" id="" class="form-select" required>
                             <option value="">-- Pilih Opsi --</option>
                             <option>A</option>
@@ -185,24 +188,24 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="">Penyakit yang Pernah Diderita</label>
+                        <label>Penyakit yang Pernah Diderita</label>
                         <textarea name="" id="" class="form-control"></textarea>
-                        <small>Contoh: 1. Asma / Tahun 2015 / Sudah Sembuh</small>
+                        <small class="form-text text-muted">Contoh: 1. Asma / Tahun 2015 / Sudah Sembuh</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Kelainan Jasmani</label>
+                        <label>Kelainan Jasmani</label>
                         <input type="text" class="form-control">
-                        <small>Contoh: Membutuhkan kursi roda, dsb</small>
+                        <small class="form-text text-muted">Contoh: Membutuhkan kursi roda, dsb</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tinggi Badan *</label>
+                        <label>Tinggi Badan *</label>
                         <input type="text" class="form-control" required>
-                        <small>Contoh: 140 cm</small>
+                        <small class="form-text text-muted">Contoh: 140 cm</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Berat Badan *</label>
+                        <label>Berat Badan *</label>
                         <input type="text" class="form-control" required>
-                        <small>Contoh: 40 kg</small>
+                        <small class="form-text text-muted">Contoh: 40 kg</small>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -219,16 +222,16 @@
                     <h4>Keterangan Pendidikan</h4>
                     <hr>
                     <div class="mb-3">
-                        <label for="">NISN</label>
+                        <label>NISN</label>
                         <input type="text" class="form-control">
-                        <small>Masukkan Nomor Induk Siswa Nasional (NISN) - Silakan dilewati apabila anda tidak mengetahui.</small>
+                        <small class="form-text text-muted">Masukkan Nomor Induk Siswa Nasional (NISN) - Silakan dilewati apabila anda tidak mengetahui.</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Sekolah Asal *</label>
+                        <label>Sekolah Asal *</label>
                         <input type="text" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Alamat Lengkap *</label>
+                        <label>Alamat Lengkap *</label>
                         <div class="row mb-3">
                             <div class="col">
                                 <input type="text" class="form-control" placeholder="Alamat 1" required>
@@ -253,37 +256,37 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="">No. Telepon Sekolah Asal *</label>
+                            <label>No. Telepon Sekolah Asal *</label>
                             <input type="text" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label for="">Nilai UASBN</label>
+                            <label>Nilai UASBN</label>
                             <input type="text" class="form-control">
-                            <small>Jika Belum ada ketik "belum ada"</small>
+                            <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
-                            <label for="">Matematika</label>
+                            <label>Matematika</label>
                             <input type="text" class="form-control">
-                            <small>Jika Belum ada ketik "belum ada"</small>
+                            <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
-                            <label for="">Bahasa Indonesia</label>
+                            <label>Bahasa Indonesia</label>
                             <input type="text" class="form-control">
-                            <small>Jika Belum ada ketik "belum ada"</small>
+                            <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
-                            <label for="">IPA</label>
+                            <label>IPA</label>
                             <input type="text" class="form-control">
-                            <small>Jika Belum ada ketik "belum ada"</small>
+                            <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
-                            <label for="">No. STTB (Ijazah)</label>
+                            <label>No. STTB (Ijazah)</label>
                             <input type="text" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label for="">Prestasi yang Pernah Diraih</label>
+                            <label>Prestasi yang Pernah Diraih</label>
                             <textarea name="" id="" class="form-control"></textarea>
-                            <small>Contoh: Olimpiade Matematika Nasional / Tahun 2014 / Juara 1</small>
+                            <small class="form-text text-muted">Contoh: Olimpiade Matematika Nasional / Tahun 2014 / Juara 1</small>
                         </div>
                     </div>
                 </div>
@@ -301,23 +304,23 @@
                     <h4>Keterangan Ayah</h4>
                     <hr>
                     <div class="mb-3">
-                        <label for="">Nama Lengkap Ayah *</label>
+                        <label>Nama Lengkap Ayah *</label>
                         <input type="text" class="form-control" placeholder="Nama Lengkap" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tempat Lahir Ayah *</label>
+                        <label>Tempat Lahir Ayah *</label>
                         <input type="text" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tanggal Lahir Ayah *</label>
+                        <label>Tanggal Lahir Ayah *</label>
                         <input type="date" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Agama Ayah *</label>
+                        <label>Agama Ayah *</label>
                         <input type="text" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Kewarganegaraan Ayah *</label>
+                        <label>Kewarganegaraan Ayah *</label>
                         <select name="" id="" class="form-select" required>
                             <option value="">-- Pilih Opsi --</option>
                             <option>WNI</option>
@@ -326,15 +329,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="">No HP Ayah *</label>
+                        <label>No HP Ayah *</label>
                         <input type="number" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Alamat Email Ayah *</label>
+                        <label>Alamat Email Ayah *</label>
                         <input type="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Masih Hidup (Ayah) *</label>
+                        <label>Masih Hidup (Ayah) *</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio">
                             <label class="form-check-label">
@@ -352,23 +355,23 @@
                     <h4>Keterangan Ibu</h4>
                     <hr>
                     <div class="mb-3">
-                        <label for="">Nama Lengkap Ibu *</label>
+                        <label>Nama Lengkap Ibu *</label>
                         <input type="text" class="form-control" placeholder="Nama Lengkap" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tempat Lahir Ibu *</label>
+                        <label>Tempat Lahir Ibu *</label>
                         <input type="text" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tanggal Lahir Ibu *</label>
+                        <label>Tanggal Lahir Ibu *</label>
                         <input type="date" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Agama Ibu *</label>
+                        <label>Agama Ibu *</label>
                         <input type="text" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Kewarganegaraan Ibu *</label>
+                        <label>Kewarganegaraan Ibu *</label>
                         <select name="" id="" class="form-select" required>
                             <option value="">-- Pilih Opsi --</option>
                             <option>WNI</option>
@@ -377,15 +380,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="">No HP Ibu *</label>
+                        <label>No HP Ibu *</label>
                         <input type="number" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Alamat Email Ibu *</label>
+                        <label>Alamat Email Ibu *</label>
                         <input type="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="">Masih Hidup (Ibu) *</label>
+                        <label>Masih Hidup (Ibu) *</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio">
                             <label class="form-check-label">
@@ -403,20 +406,20 @@
                     <h4>Keterangan Wali</h4>
                     <hr>
                     <div class="mb-3">
-                        <label for="">Tempat Lahir Wali</label>
+                        <label>Tempat Lahir Wali</label>
                         <input type="text" class="form-control">
-                        <small>isi Kolom ini apabila anda bukan orang tua Siswa. lewatkan kolom ini apabila anda adalah orang tua siswa.</small>
+                        <small class="form-text text-muted">isi Kolom ini apabila anda bukan orang tua Siswa. lewatkan kolom ini apabila anda adalah orang tua siswa.</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Tanggal Lahir Wali</label>
+                        <label>Tanggal Lahir Wali</label>
                         <input type="date" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="">Agama Wali</label>
+                        <label>Agama Wali</label>
                         <input type="text" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="">Kewarganegaraan Wali</label>
+                        <label>Kewarganegaraan Wali</label>
                         <select name="" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
                             <option>WNI</option>
@@ -425,20 +428,36 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="">No HP Wali</label>
+                        <label>Pendidikan Terakhir Wali</label>
+                        <select name="" id="" class="form-select">
+                            <option value="">-- Pilih Opsi --</option>
+                            <option>SD</option>
+                            <option>SMP</option>
+                            <option>SMA</option>
+                            <option>D I</option>
+                            <option>D II</option>
+                            <option>D III</option>
+                            <option>D IV / S - 1</option>
+                            <option>S - 2</option>
+                            <option>S - 3</option>
+                            <option>Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>No HP Wali</label>
                         <input type="number" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="">Alamat Email Wali</label>
+                        <label>Alamat Email Wali</label>
                         <input type="email" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="">Pekerjaan Wali</label>
+                        <label>Pekerjaan Wali</label>
                         <input type="text" class="form-control">
-                        <small>Contoh: Swasta / Azhari Islamic School / Staff Marketing (Kategori Pekerjaan / Instansi / Jabatan)</small>
+                        <small class="form-text text-muted">Contoh: Swasta / Azhari Islamic School / Staff Marketing (Kategori Pekerjaan / Instansi / Jabatan)</small>
                     </div>
                     <div class="mb-3">
-                        <label for="">Masih Hidup (Wali)</label>
+                        <label>Masih Hidup (Wali)</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio">
                             <label class="form-check-label">
@@ -468,6 +487,34 @@
                         <div class="btn-group">
                             <button class="btn btn-info">Previous</button>
                             <button class="btn btn-warning">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form action="">
+                <div class="card-body">
+                    <h4>Keterangan Tambahan</h4>
+                    <hr>
+                    <div class="mb-3">
+                        <label>Dalam Keadaan Darurat No. Telp yang dapat Dihubungi *</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Nama *</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Hubungan calon siswa dengan nama diatas *</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <h4>Selesaikan Tahap pendaftaran Online dengan membayar formulir pendafaran online Melalui Bank Transfer.</h4>
+                    <small class="form-text text-muted">Informasi biaya formulir online dan Rekening Tujuan Transfer akan kami kirim via email yang terdaftar dalam form isian dalam waktu paling lambat 1x24 Jam pada jam operasional 08.00-16.00 WIB.</small>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <div class="btn-group">
+                            <button class="btn btn-info">Previous</button>
+                            <button class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </div>
