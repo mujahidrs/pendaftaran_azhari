@@ -1,351 +1,292 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li>
-            </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-      </nav>
+@extends('layouts.app')
 
-      {{ var_dump($form_1) }}
+@section('content')
+      {{-- {{ var_dump($form_1 ? $form_1 : '') }}
+      {{ var_dump($form_2 ? $form_2 : '') }}
+      {{ var_dump($form_3 ? $form_3 : '') }}
+      {{ var_dump($form_4 ? $form_4 : '') }}
+      {{ var_dump($form_5 ? $form_5 : '') }}
+      {{ var_dump(isset($page) ? $page : '') }} --}}
 
       <div class="container py-3">
+        {{-- Alert Success yang dikirim dari controller --}}
+        @if(session('status'))
+        <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>
+        @endif
+
         <div class="card">
             <div class="card-header">
                 <h3>Form Pendaftaran Murid Baru</h3>
                 <span>Isi Form Online dengan sebenar-benarnya</span>
                 <div class="progress my-3" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: 20%">20%</div>
+                    <div class="progress-bar" style="width: {{ isset($page) ? $page * 20 . '%' : '' }}">{{ isset($page) ? $page * 20 . '%' : '' }}</div>
                 </div>
             </div>
-            <form action="{{ route('store') }}" method="POST">
-                @csrf
-                <div class="card-body">
+            <form method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                <input type="hidden" name="page" value="{{ isset($page) ? $page : 1 }}">
+                <div class="card-body {{ isset($page) ? $page != 1 ? 'd-none' : '' : ''}}">
                     <h4>Pendaftaran Murid Baru 2024/2025</h4>
                     <small class="form-text text-muted">Form ini merupakan Form Pendaftaran untuk Murid kelas 7 SMP yang akan memulai Tahun Pelajaran pada Bulan Juli Tahun 2024</small>
                     <hr>
                     <div class="mb3">
                         <label>Darimanakah Bapak/Ibu Mengetahui Sekolah Azhari Islamic School Lebak Bulus Jakarta? *</label>
-                        <select name="info_dari" id="" class="form-select" required>
+                        <select name="info_dari" id="" class="form-select" >
                             <option value="">-- Pilih Opsi --</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'Keluarga' ? : '' : '' }}>Keluarga</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'Teman/Kenalan' ? : '' : '' }}>Teman/Kenalan</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'Website' ? : '' : '' }}>Website</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'IG' ? : '' : '' }}>IG</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'FB' ? : '' : '' }}>FB</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'Spanduk/Baliho' ? : '' : '' }}>Spanduk/Baliho</option>
-                            <option {{ $form_1 ? $form_1['info_dari'] == 'Brosur Cetak' ? : '' : '' }}>Brosur Cetak</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Keluarga' ? 'selected' : '' : '' }}>Keluarga</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Teman/Kenalan' ? 'selected' : '' : '' }}>Teman/Kenalan</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Website' ? 'selected' : '' : '' }}>Website</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'IG' ? 'selected' : '' : '' }}>IG</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'FB' ? 'selected' : '' : '' }}>FB</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Spanduk/Baliho' ? 'selected' : '' : '' }}>Spanduk/Baliho</option>
+                            <option {{ $form_1 ? $form_1['info_dari'] == 'Brosur Cetak' ? 'selected' : '' : '' }}>Brosur Cetak</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>
                             Sebutkan nama Bapak/Ibu yang memberikan rekomendasi kepada Saudara sehingga Saudara mendaftar di Azhari Lebak Bulus Jakarta
                         </label>
-                        <input type="text" name="referensi" class="form-control">
+                        <input type="text" name="referensi" class="form-control" value="{{ $form_1 ? $form_1['referensi'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Tahun Pelajaran *</label>
-                        <input type="text" name="tahun_pelajaran" class="form-control" required maxlength="10">
+                        <input type="text" name="tahun_pelajaran" class="form-control"  maxlength="10" value="{{ $form_1 ? $form_1['tahun_pelajaran'] : '' }}">
                         <small class="form-text text-muted">Contoh: 2024/2025</small>
                     </div>
                     <div class="mb-3">
                         <label>Jenjang Yang Diminati *</label>
                         <select name="jenjang_tujuan" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
-                            <option>SD</option>
-                            <option>SMP</option>
-                            <option>SMA</option>
+                            <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'SD' ? 'selected' : '' : '' }}>SD</option>
+                            <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'SMP' ? 'selected' : '' : '' }}>SMP</option>
+                            <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'SMA' ? 'selected' : '' : '' }}>SMA</option>
                         </select>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-warning">
-                            Next
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <form action="">
-                <div class="card-body">
+                <div class="card-body {{ isset($page) ? $page != 2 ? 'd-none' : '' : ''}}">
                     <h4>Data Calon Murid</h4>
                     <hr>
                     <div class="mb-3">
                         <label>Nama Lengkap *</label>
-                        <input type="text" class="form-control" placeholder="Nama Lengkap" required>
+                        <input name="nama_lengkap" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_2 ? $form_2['nama_lengkap'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nama Lengkap Murid / Peserta PMB</small>
                     </div>
                     <div class="mb-3">
                         <label>Nama Panggilan *</label>
-                        <input type="text" class="form-control" placeholder="Nama Panggilan" required>
+                        <input name="nama_panggilan" type="text" class="form-control" placeholder="Nama Panggilan"  value="{{ $form_2 ? $form_2['nama_panggilan'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nama Panggilan Siswa / Peserta PMB</small>
                     </div>
                     <div class="mb-3">
                         <label>Nomor Kartu Keluarga *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="no_kk" type="text" class="form-control"  value="{{ $form_2 ? $form_2['no_kk'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nomor Kartu Keluarga (KK) terdapat di bagian atas Kartu Keluarga (KK)</small>
                     </div>
                     <div class="mb-3">
                         <label>NIK *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="nik" type="text" class="form-control"  value="{{ $form_2 ? $form_2['nik'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nomor Induk Kependudukan Calon Siswa</small>
                     </div>
                     <div class="mb-3">
                         <label>Jenis Kelamin *</label>
-                        <select name="" id="" class="form-select" required>
+                        <select name="jenis_kelamin" id="" class="form-select" >
                             <option value="">-- Pilih Opsi --</option>
-                            <option>Laki-laki</option>
-                            <option>Perempuan</option>
+                            <option {{ $form_2 ? $form_2['jenis_kelamin'] == 'Laki-laki' ? 'selected' : '' : '' }}>Laki-laki</option>
+                            <option {{ $form_2 ? $form_2['jenis_kelamin'] == 'Perempuan' ? 'selected' : '' : '' }}>Perempuan</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>Tempat Lahir *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="tempat_lahir" type="text" class="form-control"  value="{{ $form_2 ? $form_2['tempat_lahir'] : '' }}">
                         <small class="form-text text-muted">Masukkan Tempat Lahir Siswa/Peserta PSB</small>
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Lahir *</label>
-                        <input type="date" name="" id="" class="form-control" required>
+                        <input name="tanggal_lahir" type="date" id="" class="form-control"  value="{{ $form_2 ? $form_2['tanggal_lahir'] : '' }}">
                         <small class="form-text text-muted">Masukkan Tanggal Lahir Siswa/Peserta PSB</small>
                     </div>
                     <div class="mb-3">
                         <label>Anak ke *</label>
-                        <input type="text" class="form-control" maxlength="20" required>
+                        <input name="anak_ke" type="text" class="form-control" maxlength="20"  value="{{ $form_2 ? $form_2['anak_ke'] : '' }}">
                         <small class="form-text text-muted">Contoh: 1 dari 2 bersaudara</small>
                     </div>
                     <div class="mb-3">
                         <label>Alamat Lengkap *</label>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Alamat 1" required>
+                                <input name="alamat_1" type="text" class="form-control" placeholder="Alamat 1"  value="{{ $form_2 ? $form_2['alamat_1'] : '' }}">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Kota" required>
+                                <input name="kota" type="text" class="form-control" placeholder="Kota"  value="{{ $form_2 ? $form_2['kota'] : '' }}">
                             </div>
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Daerah / Provinsi" required>
+                                <input name="provinsi" type="text" class="form-control" placeholder="Daerah / Provinsi"  value="{{ $form_2 ? $form_2['provinsi'] : '' }}">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Kode Pos" required>
+                                <input name="kode_pos" type="text" class="form-control" placeholder="Kode Pos"  value="{{ $form_2 ? $form_2['kode_pos'] : '' }}">
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label>Agama *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="agama" type="text" class="form-control"  value="{{ $form_2 ? $form_2['agama'] : '' }}">
                         <small class="form-text text-muted">Contoh: Islam/Protestan/Katolik/dsb</small>
                     </div>
                     <div class="mb-3">
                         <label>Golongan Darah *</label>
-                        <select name="" id="" class="form-select" required>
+                        <select name="golongan_darah" id="" class="form-select" >
                             <option value="">-- Pilih Opsi --</option>
-                            <option>A</option>
-                            <option>B</option>
-                            <option>O</option>
-                            <option>AB</option>
-                            <option>Tidak tahu</option>
+                            <option {{ $form_2 ? $form_2['golongan_darah'] == 'A' ? 'selected' : '' : '' }}>A</option>
+                            <option {{ $form_2 ? $form_2['golongan_darah'] == 'B' ? 'selected' : '' : '' }}>B</option>
+                            <option {{ $form_2 ? $form_2['golongan_darah'] == 'O' ? 'selected' : '' : '' }}>O</option>
+                            <option {{ $form_2 ? $form_2['golongan_darah'] == 'AB' ? 'selected' : '' : '' }}>AB</option>
+                            <option {{ $form_2 ? $form_2['golongan_darah'] == 'Tidak tahu' ? 'selected' : '' : '' }}>Tidak tahu</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>Penyakit yang Pernah Diderita</label>
-                        <textarea name="" id="" class="form-control"></textarea>
+                        <textarea name="penyakit" id="" class="form-control">{{ $form_2 ? $form_2['penyakit'] : '' }}</textarea>
                         <small class="form-text text-muted">Contoh: 1. Asma / Tahun 2015 / Sudah Sembuh</small>
                     </div>
                     <div class="mb-3">
                         <label>Kelainan Jasmani</label>
-                        <input type="text" class="form-control">
+                        <input name="kelainan" type="text" class="form-control" value="{{ $form_2 ? $form_2['kelainan'] : '' }}">
                         <small class="form-text text-muted">Contoh: Membutuhkan kursi roda, dsb</small>
                     </div>
                     <div class="mb-3">
                         <label>Tinggi Badan *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="tinggi_badan" type="text" class="form-control"  value="{{ $form_2 ? $form_2['tinggi_badan'] : '' }}">
                         <small class="form-text text-muted">Contoh: 140 cm</small>
                     </div>
                     <div class="mb-3">
                         <label>Berat Badan *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="berat_badan" type="text" class="form-control"  value="{{ $form_2 ? $form_2['berat_badan'] : '' }}">
                         <small class="form-text text-muted">Contoh: 40 kg</small>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <div class="btn-group">
-                            <button class="btn btn-info">Previous</button>
-                            <button class="btn btn-warning">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form action="">
-                <div class="card-body">
+                <div class="card-body {{ isset($page) ? $page != 3 ? 'd-none' : '' : ''}}">
                     <h4>Keterangan Pendidikan</h4>
                     <hr>
                     <div class="mb-3">
                         <label>NISN</label>
-                        <input type="text" class="form-control">
+                        <input value="{{ $form_3 ? $form_3['nisn'] : '' }}" name="nisn" type="text" class="form-control">
                         <small class="form-text text-muted">Masukkan Nomor Induk Siswa Nasional (NISN) - Silakan dilewati apabila anda tidak mengetahui.</small>
                     </div>
                     <div class="mb-3">
                         <label>Sekolah Asal *</label>
-                        <input type="text" class="form-control" required>
+                        <input value="{{ $form_3 ? $form_3['sekolah_asal'] : '' }}" name="sekolah_asal" type="text" class="form-control" >
                     </div>
                     <div class="mb-3">
                         <label>Alamat Lengkap *</label>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Alamat 1" required>
+                                <input value="{{ $form_3 ? $form_3['alamat_sekolah_1'] : '' }}" name="alamat_sekolah_1" type="text" class="form-control" placeholder="Alamat 1" >
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Alamat 2" required>
+                                <input value="{{ $form_3 ? $form_3['alamat_sekolah_2'] : '' }}" name="alamat_sekolah_2" type="text" class="form-control" placeholder="Alamat 2" >
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Kota" required>
+                                <input value="{{ $form_3 ? $form_3['kota_sekolah'] : '' }}" name="kota_sekolah" type="text" class="form-control" placeholder="Kota" >
                             </div>
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Daerah / Provinsi" required>
+                                <input value="{{ $form_3 ? $form_3['provinsi_sekolah'] : '' }}" name="provinsi_sekolah" type="text" class="form-control" placeholder="Daerah / Provinsi" >
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Kode Pos" required>
+                                <input value="{{ $form_3 ? $form_3['kode_pos_sekolah'] : '' }}" name="kode_pos_sekolah" type="text" class="form-control" placeholder="Kode Pos" >
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>No. Telepon Sekolah Asal *</label>
-                            <input type="text" class="form-control" required>
+                            <input value="{{ $form_3 ? $form_3['no_telp_sekolah'] : '' }}" name="no_telp_sekolah" type="text" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label>Nilai UASBN</label>
-                            <input type="text" class="form-control">
+                            <input value="{{ $form_3 ? $form_3['nilai_uasbn'] : '' }}" name="nilai_uasbn" type="text" class="form-control">
                             <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
                             <label>Matematika</label>
-                            <input type="text" class="form-control">
+                            <input value="{{ $form_3 ? $form_3['matematika'] : '' }}" name="matematika" type="text" class="form-control">
                             <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
                             <label>Bahasa Indonesia</label>
-                            <input type="text" class="form-control">
+                            <input value="{{ $form_3 ? $form_3['bahasa_indonesia'] : '' }}" name="bahasa_indonesia" type="text" class="form-control">
                             <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
                             <label>IPA</label>
-                            <input type="text" class="form-control">
+                            <input value="{{ $form_3 ? $form_3['ipa'] : '' }}" name="ipa" type="text" class="form-control">
                             <small class="form-text text-muted">Jika Belum ada ketik "belum ada"</small>
                         </div>
                         <div class="mb-3">
                             <label>No. STTB (Ijazah)</label>
-                            <input type="text" class="form-control" required>
+                            <input value="{{ $form_3 ? $form_3['no_sttb'] : '' }}" name="no_sttb" type="text" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label>Prestasi yang Pernah Diraih</label>
-                            <textarea name="" id="" class="form-control"></textarea>
+                            <textarea name="prestasi" id="" class="form-control">{{ $form_3 ? $form_3['prestasi'] : '' }}</textarea>
                             <small class="form-text text-muted">Contoh: Olimpiade Matematika Nasional / Tahun 2014 / Juara 1</small>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <div class="btn-group">
-                            <button class="btn btn-info">Previous</button>
-                            <button class="btn btn-warning">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form action="">
-                <div class="card-body">
+                <div class="card-body {{ isset($page) ? $page != 4 ? 'd-none' : '' : ''}}">
                     <h4>Keterangan Ayah</h4>
                     <hr>
                     <div class="mb-3">
                         <label>Nama Lengkap Ayah *</label>
-                        <input type="text" class="form-control" placeholder="Nama Lengkap" required>
+                        <input name="nama_lengkap_ayah" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_4 ? $form_4['nama_lengkap_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Tempat Lahir Ayah *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="tempat_lahir_ayah" type="text" class="form-control"  value="{{ $form_4 ? $form_4['tempat_lahir_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Lahir Ayah *</label>
-                        <input type="date" class="form-control" required>
+                        <input name="tanggal_lahir_ayah" type="date" class="form-control"  value="{{ $form_4 ? $form_4['tanggal_lahir_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Agama Ayah *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="agama_ayah" type="text" class="form-control"  value="{{ $form_4 ? $form_4['agama_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Kewarganegaraan Ayah *</label>
-                        <select name="" id="" class="form-select" required>
+                        <select name="kewarganegaraan_ayah" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
-                            <option>WNI</option>
-                            <option>WNA</option>
-                            <option>Lain-lain</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_ayah'] == 'WNI' ? 'selected' : '' : '' }}>WNI</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_ayah'] == 'WNA' ? 'selected' : '' : '' }}>WNA</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_ayah'] == 'Lain-lain' ? 'selected' : '' : '' }}>Lain-lain</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>No HP Ayah *</label>
-                        <input type="number" class="form-control" required>
+                        <input name="no_hp_ayah" type="number" class="form-control"  value="{{ $form_4 ? $form_4['no_hp_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Alamat Email Ayah *</label>
-                        <input type="email" class="form-control" required>
+                        <input name="email_ayah" type="email" class="form-control"  value="{{ $form_4 ? $form_4['email_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Masih Hidup (Ayah) *</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio">
+                            <input class="form-check-input" type="radio" name="masih_hidup_ayah" value="Ya" {{ $form_4 ? $form_4['masih_hidup_ayah'] == 'Ya' ? 'checked' : '' : '' }}>
                             <label class="form-check-label">
                               Ya
                             </label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="radio">
+                            <input class="form-check-input" type="radio" name="masih_hidup_ayah" value="Meninggal" {{ $form_4 ? $form_4['masih_hidup_ayah'] == 'Meninggal' ? 'checked' : '' : '' }}>
                             <label class="form-check-label">
                               Meninggal
                             </label>
@@ -356,47 +297,47 @@
                     <hr>
                     <div class="mb-3">
                         <label>Nama Lengkap Ibu *</label>
-                        <input type="text" class="form-control" placeholder="Nama Lengkap" required>
+                        <input name="nama_lengkap_ibu" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_4 ? $form_4['nama_lengkap_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Tempat Lahir Ibu *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="tempat_lahir_ibu" type="text" class="form-control"  value="{{ $form_4 ? $form_4['tempat_lahir_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Lahir Ibu *</label>
-                        <input type="date" class="form-control" required>
+                        <input name="tanggal_lahir_ibu" type="date" class="form-control"  value="{{ $form_4 ? $form_4['tanggal_lahir_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Agama Ibu *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="agama_ibu" type="text" class="form-control"  value="{{ $form_4 ? $form_4['agama_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Kewarganegaraan Ibu *</label>
-                        <select name="" id="" class="form-select" required>
+                        <select name="kewarganegaraan_ibu" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
-                            <option>WNI</option>
-                            <option>WNA</option>
-                            <option>Lain-lain</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_ibu'] == 'WNI' ? 'selected' : '' : '' }}>WNI</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_ibu'] == 'WNA' ? 'selected' : '' : '' }}>WNA</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_ibu'] == 'Lain-lain' ? 'selected' : '' : '' }}>Lain-lain</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>No HP Ibu *</label>
-                        <input type="number" class="form-control" required>
+                        <input name="no_hp_ibu" type="number" class="form-control"  value="{{ $form_4 ? $form_4['no_hp_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Alamat Email Ibu *</label>
-                        <input type="email" class="form-control" required>
+                        <input name="alamat_email_ibu" type="email" class="form-control"  value="{{ $form_4 ? $form_4['alamat_email_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Masih Hidup (Ibu) *</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio">
+                            <input class="form-check-input" type="radio" name="masih_hidup_ibu" value="Ya" {{ $form_4 ? $form_4['masih_hidup_ibu'] == 'Ya' ? 'checked' : '' : '' }}>
                             <label class="form-check-label">
                               Ya
                             </label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="radio">
+                            <input class="form-check-input" type="radio" name="masih_hidup_ibu" value="Meninggal" {{ $form_4 ? $form_4['masih_hidup_ibu'] == 'Meninggal' ? 'checked' : '' : '' }}>
                             <label class="form-check-label">
                               Meninggal
                             </label>
@@ -407,105 +348,81 @@
                     <hr>
                     <div class="mb-3">
                         <label>Tempat Lahir Wali</label>
-                        <input type="text" class="form-control">
+                        <input name="tempat_lahir_wali" type="text" class="form-control" value="{{ $form_4 ? $form_4['tempat_lahir_wali'] : '' }}">
                         <small class="form-text text-muted">isi Kolom ini apabila anda bukan orang tua Siswa. lewatkan kolom ini apabila anda adalah orang tua siswa.</small>
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Lahir Wali</label>
-                        <input type="date" class="form-control">
+                        <input name="tanggal_lahir_wali" type="date" class="form-control" value="{{ $form_4 ? $form_4['tanggal_lahir_wali'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Agama Wali</label>
-                        <input type="text" class="form-control">
+                        <input name="agama_wali" type="text" class="form-control" value="{{ $form_4 ? $form_4['agama_wali'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Kewarganegaraan Wali</label>
-                        <select name="" id="" class="form-select">
+                        <select name="kewarganegaraan_wali" id="" class="form-select" value="{{ $form_4 ? $form_4['kewarganegaraan_wali'] : '' }}">
                             <option value="">-- Pilih Opsi --</option>
-                            <option>WNI</option>
-                            <option>WNA</option>
-                            <option>Lain-lain</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_wali'] == 'WNI' ? 'selected' : '' : '' }}>WNI</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_wali'] == 'WNA' ? 'selected' : '' : '' }}>WNA</option>
+                            <option {{ $form_4 ? $form_4['kewarganegaraan_wali'] == 'Lain-lain' ? 'selected' : '' : '' }}>Lain-lain</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>Pendidikan Terakhir Wali</label>
-                        <select name="" id="" class="form-select">
+                        <select name="pendidikan_terakhir_wali" id="" class="form-select" value="{{ $form_4 ? $form_4['pendidikan_terakhir_wali'] : '' }}">
                             <option value="">-- Pilih Opsi --</option>
-                            <option>SD</option>
-                            <option>SMP</option>
-                            <option>SMA</option>
-                            <option>D I</option>
-                            <option>D II</option>
-                            <option>D III</option>
-                            <option>D IV / S - 1</option>
-                            <option>S - 2</option>
-                            <option>S - 3</option>
-                            <option>Lainnya</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'SD' ? 'selected' : '' : '' }}>SD</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'SMP' ? 'selected' : '' : '' }}>SMP</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'SMA' ? 'selected' : '' : '' }}>SMA</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'D I' ? 'selected' : '' : '' }}>D I</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'D II' ? 'selected' : '' : '' }}>D II</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'D III' ? 'selected' : '' : '' }}>D III</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'D IV / S - 1' ? 'selected' : '' : '' }}>D IV / S - 1</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'S - 2' ? 'selected' : '' : '' }}>S - 2</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'S - 3' ? 'selected' : '' : '' }}>S - 3</option>
+                            <option {{ $form_4 ? $form_4['pendidikan_terakhir_wali'] == 'Lainnya' ? 'selected' : '' : '' }}>Lainnya</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>No HP Wali</label>
-                        <input type="number" class="form-control">
+                        <input name="no_hp_wali" type="number" class="form-control" value="{{ $form_4 ? $form_4['no_hp_wali'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Alamat Email Wali</label>
-                        <input type="email" class="form-control">
+                        <input name="email_wali" type="email" class="form-control" value="{{ $form_4 ? $form_4['email_wali'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Pekerjaan Wali</label>
-                        <input type="text" class="form-control">
+                        <input name="pekerjaan_wali" type="text" class="form-control" value="{{ $form_4 ? $form_4['pekerjaan_wali'] : '' }}">
                         <small class="form-text text-muted">Contoh: Swasta / Azhari Islamic School / Staff Marketing (Kategori Pekerjaan / Instansi / Jabatan)</small>
                     </div>
                     <div class="mb-3">
-                        <label>Masih Hidup (Wali)</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio">
-                            <label class="form-check-label">
-                              Ya
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio">
-                            <label class="form-check-label">
-                              Meninggal
-                            </label>
-                          </div>
-                    </div>
-                    <div class="mb-3">
-                        <select name="" id="" class="form-select">
+                        <label>Hubungan calon siswa dengan Wali</label>
+                        <select name="hubungan_wali" id="" class="form-select" value="{{ $form_4 ? $form_4['hubungan_wali'] : '' }}">
                             <option value="">-- Pilih Opsi --</option>
-                            <option>Anak Tiri</option>
-                            <option>Anak Angkat</option>
-                            <option>Keponakan</option>
-                            <option>Sepupu</option>
-                            <option>Lainnya</option>
+                            <option {{ $form_4 ? $form_4['hubungan_wali'] == 'Anak Tiri' ? 'selected' : '' : '' }}>Anak Tiri</option>
+                            <option {{ $form_4 ? $form_4['hubungan_wali'] == 'Anak Angkat' ? 'selected' : '' : '' }}>Anak Angkat</option>
+                            <option {{ $form_4 ? $form_4['hubungan_wali'] == 'Keponakan' ? 'selected' : '' : '' }}>Keponakan</option>
+                            <option {{ $form_4 ? $form_4['hubungan_wali'] == 'Sepupu' ? 'selected' : '' : '' }}>Sepupu</option>
+                            <option {{ $form_4 ? $form_4['hubungan_wali'] == 'Lainnya' ? 'selected' : '' : '' }}>Lainnya</option>
                         </select>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <div class="btn-group">
-                            <button class="btn btn-info">Previous</button>
-                            <button class="btn btn-warning">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form action="">
-                <div class="card-body">
+                <div class="card-body {{ isset($page) ? $page != 5 ? 'd-none' : '' : ''}}">
                     <h4>Keterangan Tambahan</h4>
                     <hr>
                     <div class="mb-3">
                         <label>Dalam Keadaan Darurat No. Telp yang dapat Dihubungi *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="no_telp_darurat" type="text" class="form-control" value="{{ $form_5 ? $form_5['no_telp_darurat'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Nama *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="nama_darurat" type="text" class="form-control" value="{{ $form_5 ? $form_5['nama_darurat'] : '' }}">
                     </div>
                     <div class="mb-3">
                         <label>Hubungan calon siswa dengan nama diatas *</label>
-                        <input type="text" class="form-control" required>
+                        <input name="hubungan_darurat" type="text" class="form-control" value="{{ $form_5 ? $form_5['hubungan_darurat'] : '' }}">
                     </div>
                     <h4>Selesaikan Tahap pendaftaran Online dengan membayar formulir pendafaran online Melalui Bank Transfer.</h4>
                     <small class="form-text text-muted">Informasi biaya formulir online dan Rekening Tujuan Transfer akan kami kirim via email yang terdaftar dalam form isian dalam waktu paling lambat 1x24 Jam pada jam operasional 08.00-16.00 WIB.</small>
@@ -513,8 +430,9 @@
                 <div class="card-footer">
                     <div class="d-grid gap-2">
                         <div class="btn-group">
-                            <button class="btn btn-info">Previous</button>
-                            <button class="btn btn-primary">Submit</button>
+                            <a href="{{ route('goToPage', $page - 1) }}" class="btn btn-info {{ isset($page) ? $page < 2 ? 'd-none' : '' : '' }}">Previous</a>
+                            <button formaction="{{ route('store') }}" type="submit" class="btn btn-primary {{ isset($page) ? $page >= 5 ? 'd-none' : '' : '' }}">Next</button>
+                            <button formaction="{{ route('submitForm') }}" type="submit" class="btn btn-success {{ isset($page) ? $page < 5 ? 'd-none' : '' : '' }}">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -522,6 +440,4 @@
         </div>
       </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
-</html>
+@endsection
