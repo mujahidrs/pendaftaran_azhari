@@ -23,6 +23,17 @@
                 <div class="progress my-3" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                     <div class="progress-bar" style="width: {{ isset($page) ? $page * 20 . '%' : '' }}">{{ isset($page) ? $page * 20 . '%' : '' }}</div>
                 </div>
+                {{-- Show response validation --}}
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <h5>Ada kesalahan dalam pengisian formulir:</h5>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
             </div>
             <form method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />

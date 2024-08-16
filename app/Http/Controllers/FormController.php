@@ -35,6 +35,70 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
+        if($request->page == '1'){
+            // form_1 validation
+            $request->validate([
+                'info_dari' => ['required'],
+                'tahun_pelajaran' => ['required'],
+                'jenjang_tujuan' => ['required'],
+            ]);
+        }
+
+        if($request->page == '2'){
+            $request->validate([
+                'nama_lengkap' => ['required'],
+                'nama_panggilan' => ['required'],
+                'no_kk' => ['required', 'integer'],
+                'nik' => ['required', 'integer'],
+                'jenis_kelamin' => ['required'],
+                'tempat_lahir' => ['required'],
+                'tanggal_lahir' => ['required'],
+                'anak_ke' => ['required'],
+                'alamat_1' => ['required'],
+                'kota' => ['required'],
+                'provinsi' => ['required'],
+                'kode_pos' => ['required', 'integer'],
+                'agama' => ['required'],
+                'golongan_darah' => ['required'],
+                'tinggi_badan' => ['required'],
+                'berat_badan' => ['required'],
+            ]);
+        }
+
+        if($request->page == '3'){
+            $request->validate([
+                'sekolah_asal' => ['required'],
+                'alamat_sekolah_1' => ['required'],
+                'alamat_sekolah_2' => ['required'],
+                'kota_sekolah' => ['required'],
+                'provinsi_sekolah' => ['required'],
+                'kode_pos_sekolah' => ['required'],
+                'no_telp_sekolah' => ['required'],
+            ]);
+        }
+
+        if($request->page == '4'){
+            $request->validate([
+                'nama_lengkap_ayah' => ['required'],
+                'tempat_lahir_ayah' => ['required'],
+                'tanggal_lahir_ayah' => ['required'],
+                'agama_ayah' => ['required'],
+                'kewarganegaraan_ayah' => ['required'],
+                'no_hp_ayah' => ['required'],
+                'email_ayah' => ['required', 'email'],
+                'masih_hidup_ayah' => ['required'],
+                'nama_lengkap_ibu' => ['required'],
+                'tempat_lahir_ibu' => ['required'],
+                'tanggal_lahir_ibu' => ['required'],
+                'agama_ibu' => ['required'],
+                'kewarganegaraan_ibu' => ['required'],
+                'no_hp_ibu' => ['required'],
+                'alamat_email_ibu' => ['required', 'email'],
+                'masih_hidup_ibu' => ['required'],
+                'email_wali' => ['email'],
+            ]);
+        }
+
         $form_1 = [
             'info_dari' => $request->info_dari,
             'referensi' => $request->referensi,
@@ -133,6 +197,13 @@ class FormController extends Controller
             'nama_darurat' => $request->nama_darurat,
             'hubungan_darurat' => $request->hubungan_darurat,
         ];
+
+        //validation
+        $request->validate([
+            'no_telp_darurat' => ['required'],
+            'nama_darurat' => ['required'],
+            'hubungan_darurat' => ['required'],
+        ]);
         
         $form = Form::create(array_merge($form_1, $form_2, $form_3, $form_4, $form_5));
 
@@ -144,9 +215,20 @@ class FormController extends Controller
         $cookie4 = cookie('form_4', null, -1);
         $cookie5 = cookie('form_5', null, -1);
 
-        Mail::to($form_4['email_ayah'])->send(new FormSubmitted($form));
-        Mail::to($form_4['alamat_email_ibu'])->send(new FormSubmitted($form));
-        Mail::to($form_4['email_wali'])->send(new FormSubmitted($form));
+
+        //check if email is not empty
+        if (!empty($form_4['email_ayah'])) {
+            Mail::to($form_4['email_ayah'])->send(new FormSubmitted($form));
+        }
+        if (!empty($form_4['alamat_email_ibu'])) {
+            Mail::to($form_4['alamat_email_ibu'])->send(new FormSubmitted($form));
+        }
+        if (!empty($form_4['email_wali'])) {
+            Mail::to($form_4['email_wali'])->send(new FormSubmitted($form));
+        }
+
+        //send email to admin
+        // Mail::to('admin@example.com')->send(new FormSubmitted($form));
 
         return redirect()->back()
                     ->with('status', 'Berhasil mengisi form pendaftaran, silahkan cek email untuk melanjutkan proses berikutnya');
