@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('info_dari');
             $table->string('referensi')->nullable();
+            $table->string('jenis_pendaftaran');
             $table->string('tahun_pelajaran');
             $table->string('jenjang_tujuan');
             $table->string('nama_lengkap');
@@ -43,6 +44,8 @@ return new class extends Migration
             $table->string('provinsi_sekolah');
             $table->string('kode_pos_sekolah');
             $table->string('no_telp_sekolah');
+            $table->string('no_wa_kepala_sekolah');
+            $table->string('no_wa_walas_sekolah');
             $table->string('nilai_uasbn')->nullable();
             $table->string('matematika')->nullable();
             $table->string('bahasa_indonesia')->nullable();
@@ -65,6 +68,7 @@ return new class extends Migration
             $table->string('no_hp_ibu');
             $table->string('alamat_email_ibu');
             $table->string('masih_hidup_ibu');
+            $table->string('nama_lengkap_wali')->nullable();
             $table->string('tempat_lahir_wali')->nullable();
             $table->string('tanggal_lahir_wali')->nullable();
             $table->string('agama_wali')->nullable();
@@ -77,6 +81,7 @@ return new class extends Migration
             $table->string('no_telp_darurat');
             $table->string('nama_darurat');
             $table->string('hubungan_darurat');
+            $table->enum('status', ['pending', 'completed'])->default('pending');
             $table->timestamps();
         });
     }

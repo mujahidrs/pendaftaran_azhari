@@ -16,13 +16,13 @@
         </div>
         @endif
 
-        <div class="card">
+        <div class="card {{ session('status') ? 'd-none' : '' }}">
             <div class="card-header">
                 <h3>Form Pendaftaran Murid Baru</h3>
                 <span>Isi Form Online dengan sebenar-benarnya</span>
-                <div class="progress my-3" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: {{ isset($page) ? $page * 20 . '%' : '' }}">{{ isset($page) ? $page * 20 . '%' : '' }}</div>
-                </div>
+                <div class="progress my-3" style="height: 20px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ isset($page) ? $page * (100/5) . '%' : '' }}" aria-valuenow="{{ isset($page) ? $page * (100/5) : 20 }}" aria-valuemin="0" aria-valuemax="100">{{ isset($page) ? $page * (100/5) . '%' : '' }}</div>
+                  </div>
                 {{-- Show response validation --}}
                 @if(count($errors) > 0)
                 <div class="alert alert-danger" role="alert">
@@ -39,11 +39,11 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="page" value="{{ isset($page) ? $page : 1 }}">
                 <div class="card-body {{ isset($page) ? $page != 1 ? 'd-none' : '' : ''}}">
-                    <h4>Pendaftaran Murid Baru 2024/2025</h4>
-                    <small class="form-text text-muted">Form ini merupakan Form Pendaftaran untuk Murid kelas 7 SMP yang akan memulai Tahun Pelajaran pada Bulan Juli Tahun 2024</small>
+                    <h4>Pendaftaran Murid Baru {{ date('Y') + 1 }}/{{ date('Y') + 2 }}</h4>
+                    <small class="form-text text-muted">Form ini merupakan Form Pendaftaran untuk peserta didik yang akan memulai Tahun Pelajaran pada Bulan Juli Tahun {{ date('Y') + 1 }}</small>
                     <hr>
-                    <div class="mb3">
-                        <label>Darimanakah Bapak/Ibu Mengetahui Sekolah Azhari Islamic School Lebak Bulus Jakarta? *</label>
+                    <div class="mb-3">
+                        <label>Darimanakah Bapak/Ibu Mengetahui Sekolah Azhari Islamic School Lebak Bulus Jakarta? <span class="text-danger">*</span></label>
                         <select name="info_dari" id="" class="form-select" >
                             <option value="">-- Pilih Opsi --</option>
                             <option {{ $form_1 ? $form_1['info_dari'] == 'Keluarga' ? 'selected' : '' : '' }}>Keluarga</option>
@@ -62,17 +62,42 @@
                         <input type="text" name="referensi" class="form-control" value="{{ $form_1 ? $form_1['referensi'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Tahun Pelajaran *</label>
-                        <input type="text" name="tahun_pelajaran" class="form-control"  maxlength="10" value="{{ $form_1 ? $form_1['tahun_pelajaran'] : '' }}">
-                        <small class="form-text text-muted">Contoh: 2024/2025</small>
+                        <label>Jenis Pendaftaran <span class="text-danger">*</span></label>
+                        <select name="jenis_pendaftaran" id="jenis_pendaftaran" class="form-select">
+                            <option value="">-- Pilih Opsi --</option>
+                            <option {{ $form_1 ? $form_1['jenis_pendaftaran'] == 'Murid Baru' ? 'selected' : '' : '' }}>Murid Baru</option>
+                            <option {{ $form_1 ? $form_1['jenis_pendaftaran'] == 'Murid Pindahan' ? 'selected' : '' : '' }}>Murid Pindahan</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label>Jenjang Yang Diminati *</label>
-                        <select name="jenjang_tujuan" id="" class="form-select">
+                        <label>Tahun Pelajaran <span class="text-danger">*</span></label>
+                        <input type="text" name="tahun_pelajaran" class="form-control"  maxlength="10" value="{{ $form_1 ? $form_1['tahun_pelajaran'] : '' }}">
+                        <small class="form-text text-muted">Contoh: 2025/2026</small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Jenjang Yang Diminati <span class="text-danger">*</span></label>
+                        <select name="jenjang_tujuan" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
-                            <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'SD' ? 'selected' : '' : '' }}>SD</option>
-                            <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'SMP' ? 'selected' : '' : '' }}>SMP</option>
-                            <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'SMA' ? 'selected' : '' : '' }}>SMA</option>
+                            <optgroup id="baru" label="─────────────">
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'PG' ? 'selected' : '' : '' }}>PG</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'TKA' ? 'selected' : '' : '' }}>TKA</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'TKB' ? 'selected' : '' : '' }}>TKB</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Kelas 1 SD' ? 'selected' : '' : '' }}>Kelas 1 SD</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Kelas 7 SMP' ? 'selected' : '' : '' }}>Kelas 7 SMP</option>    
+                            </optgroup>
+                            <optgroup id="pindahan" label="─────────────">
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan TKA' ? 'selected' : '' : '' }}>Murid Pindahan TKA</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan TKB' ? 'selected' : '' : '' }}>Murid Pindahan TKB</option>
+                                <option disabled>─────────────</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 2 SD' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 2 SD</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 3 SD' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 3 SD</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 4 SD' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 4 SD</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 5 SD' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 5 SD</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 6 SD' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 6 SD</option>
+                                <option disabled>─────────────</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 8 SMP' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 8 SMP</option>
+                                <option {{ $form_1 ? $form_1['jenjang_tujuan'] == 'Murid Pindahan Kelas 9 SMP' ? 'selected' : '' : '' }}>Murid Pindahan Kelas 9 SMP</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
@@ -80,27 +105,27 @@
                     <h4>Data Calon Murid</h4>
                     <hr>
                     <div class="mb-3">
-                        <label>Nama Lengkap *</label>
+                        <label>Nama Lengkap <span class="text-danger">*</span></label>
                         <input name="nama_lengkap" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_2 ? $form_2['nama_lengkap'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nama Lengkap Murid / Peserta PMB</small>
                     </div>
                     <div class="mb-3">
-                        <label>Nama Panggilan *</label>
+                        <label>Nama Panggilan <span class="text-danger">*</span></label>
                         <input name="nama_panggilan" type="text" class="form-control" placeholder="Nama Panggilan"  value="{{ $form_2 ? $form_2['nama_panggilan'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nama Panggilan Siswa / Peserta PMB</small>
                     </div>
                     <div class="mb-3">
-                        <label>Nomor Kartu Keluarga *</label>
+                        <label>Nomor Kartu Keluarga <span class="text-danger">*</span></label>
                         <input name="no_kk" type="text" class="form-control"  value="{{ $form_2 ? $form_2['no_kk'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nomor Kartu Keluarga (KK) terdapat di bagian atas Kartu Keluarga (KK)</small>
                     </div>
                     <div class="mb-3">
-                        <label>NIK *</label>
+                        <label>NIK <span class="text-danger">*</span></label>
                         <input name="nik" type="text" class="form-control"  value="{{ $form_2 ? $form_2['nik'] : '' }}">
                         <small class="form-text text-muted">Masukkan Nomor Induk Kependudukan Calon Siswa</small>
                     </div>
                     <div class="mb-3">
-                        <label>Jenis Kelamin *</label>
+                        <label>Jenis Kelamin <span class="text-danger">*</span></label>
                         <select name="jenis_kelamin" id="" class="form-select" >
                             <option value="">-- Pilih Opsi --</option>
                             <option {{ $form_2 ? $form_2['jenis_kelamin'] == 'Laki-laki' ? 'selected' : '' : '' }}>Laki-laki</option>
@@ -108,22 +133,22 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>Tempat Lahir *</label>
+                        <label>Tempat Lahir <span class="text-danger">*</span></label>
                         <input name="tempat_lahir" type="text" class="form-control"  value="{{ $form_2 ? $form_2['tempat_lahir'] : '' }}">
                         <small class="form-text text-muted">Masukkan Tempat Lahir Siswa/Peserta PSB</small>
                     </div>
                     <div class="mb-3">
-                        <label>Tanggal Lahir *</label>
+                        <label>Tanggal Lahir <span class="text-danger">*</span></label>
                         <input name="tanggal_lahir" type="date" id="" class="form-control"  value="{{ $form_2 ? $form_2['tanggal_lahir'] : '' }}">
                         <small class="form-text text-muted">Masukkan Tanggal Lahir Siswa/Peserta PSB</small>
                     </div>
                     <div class="mb-3">
-                        <label>Anak ke *</label>
+                        <label>Anak ke <span class="text-danger">*</span></label>
                         <input name="anak_ke" type="text" class="form-control" maxlength="20"  value="{{ $form_2 ? $form_2['anak_ke'] : '' }}">
                         <small class="form-text text-muted">Contoh: 1 dari 2 bersaudara</small>
                     </div>
                     <div class="mb-3">
-                        <label>Alamat Lengkap *</label>
+                        <label>Alamat Lengkap <span class="text-danger">*</span></label>
                         <div class="row mb-3">
                             <div class="col">
                                 <input name="alamat_1" type="text" class="form-control" placeholder="Alamat 1"  value="{{ $form_2 ? $form_2['alamat_1'] : '' }}">
@@ -144,12 +169,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label>Agama *</label>
+                        <label>Agama <span class="text-danger">*</span></label>
                         <input name="agama" type="text" class="form-control"  value="{{ $form_2 ? $form_2['agama'] : '' }}">
                         <small class="form-text text-muted">Contoh: Islam/Protestan/Katolik/dsb</small>
                     </div>
                     <div class="mb-3">
-                        <label>Golongan Darah *</label>
+                        <label>Golongan Darah <span class="text-danger">*</span></label>
                         <select name="golongan_darah" id="" class="form-select" >
                             <option value="">-- Pilih Opsi --</option>
                             <option {{ $form_2 ? $form_2['golongan_darah'] == 'A' ? 'selected' : '' : '' }}>A</option>
@@ -170,12 +195,12 @@
                         <small class="form-text text-muted">Contoh: Membutuhkan kursi roda, dsb</small>
                     </div>
                     <div class="mb-3">
-                        <label>Tinggi Badan *</label>
+                        <label>Tinggi Badan <span class="text-danger">*</span></label>
                         <input name="tinggi_badan" type="text" class="form-control"  value="{{ $form_2 ? $form_2['tinggi_badan'] : '' }}">
                         <small class="form-text text-muted">Contoh: 140 cm</small>
                     </div>
                     <div class="mb-3">
-                        <label>Berat Badan *</label>
+                        <label>Berat Badan <span class="text-danger">*</span></label>
                         <input name="berat_badan" type="text" class="form-control"  value="{{ $form_2 ? $form_2['berat_badan'] : '' }}">
                         <small class="form-text text-muted">Contoh: 40 kg</small>
                     </div>
@@ -189,11 +214,11 @@
                         <small class="form-text text-muted">Masukkan Nomor Induk Siswa Nasional (NISN) - Silakan dilewati apabila anda tidak mengetahui.</small>
                     </div>
                     <div class="mb-3">
-                        <label>Sekolah Asal *</label>
+                        <label>Sekolah Asal <span class="text-danger">*</span></label>
                         <input value="{{ $form_3 ? $form_3['sekolah_asal'] : '' }}" name="sekolah_asal" type="text" class="form-control" >
                     </div>
                     <div class="mb-3">
-                        <label>Alamat Lengkap *</label>
+                        <label>Alamat Lengkap <span class="text-danger">*</span></label>
                         <div class="row mb-3">
                             <div class="col">
                                 <input value="{{ $form_3 ? $form_3['alamat_sekolah_1'] : '' }}" name="alamat_sekolah_1" type="text" class="form-control" placeholder="Alamat 1" >
@@ -218,8 +243,16 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>No. Telepon Sekolah Asal *</label>
+                            <label>No. Telepon Sekolah Asal <span class="text-danger">*</span></label>
                             <input value="{{ $form_3 ? $form_3['no_telp_sekolah'] : '' }}" name="no_telp_sekolah" type="text" class="form-control" >
+                        </div>
+                        <div class="mb-3">
+                            <label>No. WA Kepala Sekolah Asal <span class="text-danger">*</span></label>
+                            <input value="{{ $form_3 ? $form_3['no_wa_kepala_sekolah'] : '' }}" name="no_wa_kepala_sekolah" type="text" class="form-control" >
+                        </div>
+                        <div class="mb-3">
+                            <label>No. WA Wali Kelas Sekolah Asal <span class="text-danger">*</span></label>
+                            <input value="{{ $form_3 ? $form_3['no_wa_walas_sekolah'] : '' }}" name="no_wa_walas_sekolah" type="text" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label>Nilai UASBN</label>
@@ -256,23 +289,23 @@
                     <h4>Keterangan Ayah</h4>
                     <hr>
                     <div class="mb-3">
-                        <label>Nama Lengkap Ayah *</label>
+                        <label>Nama Lengkap Ayah <span class="text-danger">*</span></label>
                         <input name="nama_lengkap_ayah" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_4 ? $form_4['nama_lengkap_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Tempat Lahir Ayah *</label>
+                        <label>Tempat Lahir Ayah <span class="text-danger">*</span></label>
                         <input name="tempat_lahir_ayah" type="text" class="form-control"  value="{{ $form_4 ? $form_4['tempat_lahir_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Tanggal Lahir Ayah *</label>
+                        <label>Tanggal Lahir Ayah <span class="text-danger">*</span></label>
                         <input name="tanggal_lahir_ayah" type="date" class="form-control"  value="{{ $form_4 ? $form_4['tanggal_lahir_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Agama Ayah *</label>
+                        <label>Agama Ayah <span class="text-danger">*</span></label>
                         <input name="agama_ayah" type="text" class="form-control"  value="{{ $form_4 ? $form_4['agama_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Kewarganegaraan Ayah *</label>
+                        <label>Kewarganegaraan Ayah <span class="text-danger">*</span></label>
                         <select name="kewarganegaraan_ayah" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
                             <option {{ $form_4 ? $form_4['kewarganegaraan_ayah'] == 'WNI' ? 'selected' : '' : '' }}>WNI</option>
@@ -281,15 +314,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>No HP Ayah *</label>
+                        <label>No HP Ayah <span class="text-danger">*</span></label>
                         <input name="no_hp_ayah" type="number" class="form-control"  value="{{ $form_4 ? $form_4['no_hp_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Alamat Email Ayah *</label>
+                        <label>Alamat Email Ayah <span class="text-danger">*</span></label>
                         <input name="email_ayah" type="email" class="form-control"  value="{{ $form_4 ? $form_4['email_ayah'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Masih Hidup (Ayah) *</label>
+                        <label>Masih Hidup (Ayah) <span class="text-danger">*</span></label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="masih_hidup_ayah" value="Ya" {{ $form_4 ? $form_4['masih_hidup_ayah'] == 'Ya' ? 'checked' : '' : '' }}>
                             <label class="form-check-label">
@@ -307,23 +340,23 @@
                     <h4>Keterangan Ibu</h4>
                     <hr>
                     <div class="mb-3">
-                        <label>Nama Lengkap Ibu *</label>
+                        <label>Nama Lengkap Ibu <span class="text-danger">*</span></label>
                         <input name="nama_lengkap_ibu" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_4 ? $form_4['nama_lengkap_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Tempat Lahir Ibu *</label>
+                        <label>Tempat Lahir Ibu <span class="text-danger">*</span></label>
                         <input name="tempat_lahir_ibu" type="text" class="form-control"  value="{{ $form_4 ? $form_4['tempat_lahir_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Tanggal Lahir Ibu *</label>
+                        <label>Tanggal Lahir Ibu <span class="text-danger">*</span></label>
                         <input name="tanggal_lahir_ibu" type="date" class="form-control"  value="{{ $form_4 ? $form_4['tanggal_lahir_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Agama Ibu *</label>
+                        <label>Agama Ibu <span class="text-danger">*</span></label>
                         <input name="agama_ibu" type="text" class="form-control"  value="{{ $form_4 ? $form_4['agama_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Kewarganegaraan Ibu *</label>
+                        <label>Kewarganegaraan Ibu <span class="text-danger">*</span></label>
                         <select name="kewarganegaraan_ibu" id="" class="form-select">
                             <option value="">-- Pilih Opsi --</option>
                             <option {{ $form_4 ? $form_4['kewarganegaraan_ibu'] == 'WNI' ? 'selected' : '' : '' }}>WNI</option>
@@ -332,15 +365,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>No HP Ibu *</label>
+                        <label>No HP Ibu <span class="text-danger">*</span></label>
                         <input name="no_hp_ibu" type="number" class="form-control"  value="{{ $form_4 ? $form_4['no_hp_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Alamat Email Ibu *</label>
+                        <label>Alamat Email Ibu <span class="text-danger">*</span></label>
                         <input name="alamat_email_ibu" type="email" class="form-control"  value="{{ $form_4 ? $form_4['alamat_email_ibu'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Masih Hidup (Ibu) *</label>
+                        <label>Masih Hidup (Ibu) <span class="text-danger">*</span></label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="masih_hidup_ibu" value="Ya" {{ $form_4 ? $form_4['masih_hidup_ibu'] == 'Ya' ? 'checked' : '' : '' }}>
                             <label class="form-check-label">
@@ -358,9 +391,13 @@
                     <h4>Keterangan Wali</h4>
                     <hr>
                     <div class="mb-3">
+                        <label>Nama Lengkap Wali</label>
+                        <input name="nama_lengkap_wali" type="text" class="form-control" placeholder="Nama Lengkap"  value="{{ $form_4 ? $form_4['nama_lengkap_wali'] : '' }}">
+                        <small class="form-text text-muted">isi Kolom ini apabila anda bukan orang tua Siswa. lewatkan kolom ini apabila anda adalah orang tua siswa.</small>
+                    </div>
+                    <div class="mb-3">
                         <label>Tempat Lahir Wali</label>
                         <input name="tempat_lahir_wali" type="text" class="form-control" value="{{ $form_4 ? $form_4['tempat_lahir_wali'] : '' }}">
-                        <small class="form-text text-muted">isi Kolom ini apabila anda bukan orang tua Siswa. lewatkan kolom ini apabila anda adalah orang tua siswa.</small>
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Lahir Wali</label>
@@ -424,15 +461,15 @@
                     <h4>Keterangan Tambahan</h4>
                     <hr>
                     <div class="mb-3">
-                        <label>Dalam Keadaan Darurat No. Telp yang dapat Dihubungi *</label>
+                        <label>Dalam Keadaan Darurat No. Telp yang dapat Dihubungi <span class="text-danger">*</span></label>
                         <input name="no_telp_darurat" type="text" class="form-control" value="{{ $form_5 ? $form_5['no_telp_darurat'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Nama *</label>
+                        <label>Nama <span class="text-danger">*</span></label>
                         <input name="nama_darurat" type="text" class="form-control" value="{{ $form_5 ? $form_5['nama_darurat'] : '' }}">
                     </div>
                     <div class="mb-3">
-                        <label>Hubungan calon siswa dengan nama diatas *</label>
+                        <label>Hubungan calon siswa dengan nama diatas <span class="text-danger">*</span></label>
                         <input name="hubungan_darurat" type="text" class="form-control" value="{{ $form_5 ? $form_5['hubungan_darurat'] : '' }}">
                     </div>
                     <h4>Selesaikan Tahap pendaftaran Online dengan membayar formulir pendafaran online Melalui Bank Transfer.</h4>
@@ -441,14 +478,41 @@
                 <div class="card-footer">
                     <div class="d-grid gap-2">
                         <div class="btn-group">
-                            <a href="{{ route('goToPage', $page - 1) }}" class="btn btn-info {{ isset($page) ? $page < 2 ? 'd-none' : '' : '' }}">Previous</a>
-                            <button formaction="{{ route('store') }}" type="submit" class="btn btn-primary {{ isset($page) ? $page >= 5 ? 'd-none' : '' : '' }}">Next</button>
-                            <button formaction="{{ route('submitForm') }}" type="submit" class="btn btn-success {{ isset($page) ? $page < 5 ? 'd-none' : '' : '' }}">Submit</button>
+                            @if (isset($page))
+                                @if ($page > 1)
+                                    <a href="{{ route('goToPage', $page - 1) }}" class="btn btn-info">Previous</a>
+                                @endif
+                                @if ($page >= 5)
+                                    <button formaction="{{ route('submitForm') }}" type="submit" class="btn btn-success">Submit</button>        
+                                @endif
+                                @if ($page < 5)
+                                    <button formaction="{{ route('store') }}" type="submit" class="btn btn-primary">Next</button>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
             </form>
         </div>
       </div>
+@endsection
 
+
+@section('script')
+<script>
+    // Jika value dari jenis_pendaftaran adalah Murid Baru, maka di jenjang_tujuan yang muncul adalah select yang idnya baru, sebaliknya untuk Murid Pindahan
+    document.getElementById('baru').style.display = 'block';
+    document.getElementById('pindahan').style.display = 'none';
+
+    document.getElementById('jenis_pendaftaran').addEventListener('change', function() {
+        if (this.value === 'Murid Baru') {
+            //edit jadi dihapus
+            document.getElementById('baru').style.display = 'block';
+            document.getElementById('pindahan').style.display = 'none';
+        } else if (this.value === 'Murid Pindahan') {
+            document.getElementById('baru').style.display = 'none';
+            document.getElementById('pindahan').style.display = 'block';
+        }
+    });
+</script>
 @endsection

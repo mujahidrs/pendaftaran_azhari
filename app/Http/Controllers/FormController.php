@@ -12,7 +12,7 @@ class FormController extends Controller
 {
     public function index()
     {
-        //clear all cookies
+        // // clear all cookies
         // Cookie::queue(Cookie::forget('form_1'));
         // Cookie::queue(Cookie::forget('form_2'));
         // Cookie::queue(Cookie::forget('form_3'));
@@ -35,10 +35,13 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+
         if($request->page == '1'){
             // form_1 validation
             $request->validate([
                 'info_dari' => ['required'],
+                'jenis_pendaftaran' => ['required'],
                 'tahun_pelajaran' => ['required'],
                 'jenjang_tujuan' => ['required'],
             ]);
@@ -74,6 +77,8 @@ class FormController extends Controller
                 'provinsi_sekolah' => ['required'],
                 'kode_pos_sekolah' => ['required'],
                 'no_telp_sekolah' => ['required'],
+                'no_wa_kepala_sekolah' => ['required'],
+                'no_wa_walas_sekolah' => ['required'],
             ]);
         }
 
@@ -95,13 +100,14 @@ class FormController extends Controller
                 'no_hp_ibu' => ['required'],
                 'alamat_email_ibu' => ['required', 'email'],
                 'masih_hidup_ibu' => ['required'],
-                'email_wali' => ['email'],
+                // 'email_wali' => ['email'],
             ]);
         }
 
         $form_1 = [
             'info_dari' => $request->info_dari,
             'referensi' => $request->referensi,
+            'jenis_pendaftaran' => $request->jenis_pendaftaran,
             'tahun_pelajaran' => $request->tahun_pelajaran,
             'jenjang_tujuan' => $request->jenjang_tujuan,
         ];
@@ -136,6 +142,8 @@ class FormController extends Controller
             'provinsi_sekolah' => $request->provinsi_sekolah,
             'kode_pos_sekolah' => $request->kode_pos_sekolah,
             'no_telp_sekolah' => $request->no_telp_sekolah,
+            'no_wa_kepala_sekolah' => $request->no_wa_kepala_sekolah,
+            'no_wa_walas_sekolah' => $request->no_wa_walas_sekolah,
             'nilai_uasbn' => $request->nilai_uasbn,
             'matematika' => $request->matematika,
             'bahasa_indonesia' => $request->bahasa_indonesia,
@@ -161,6 +169,7 @@ class FormController extends Controller
             'no_hp_ibu' => $request->no_hp_ibu,
             'alamat_email_ibu' => $request->alamat_email_ibu,
             'masih_hidup_ibu' => $request->masih_hidup_ibu,
+            'nama_lengkap_wali' => $request->nama_lengkap_wali,
             'tempat_lahir_wali' => $request->tempat_lahir_wali,
             'tanggal_lahir_wali' => $request->tanggal_lahir_wali,
             'agama_wali' => $request->agama_wali,
@@ -171,6 +180,7 @@ class FormController extends Controller
             'pekerjaan_wali' => $request->pekerjaan_wali,
             'hubungan_wali' => $request->hubungan_wali,
         ];
+        
 
         $page = $request->page;
 
@@ -192,6 +202,11 @@ class FormController extends Controller
         $form_2 = unserialize(request()->cookie('form_2'));
         $form_3 = unserialize(request()->cookie('form_3'));
         $form_4 = unserialize(request()->cookie('form_4'));
+        
+
+        
+
+        // $cookie3 = cookie('form_3', serialize($form_3),3600);
         $form_5 = [
             'no_telp_darurat' => $request->no_telp_darurat,
             'nama_darurat' => $request->nama_darurat,
@@ -206,6 +221,7 @@ class FormController extends Controller
         ]);
         
         $form = Form::create(array_merge($form_1, $form_2, $form_3, $form_4, $form_5));
+        // $form = Form::create(array_merge($form_1, $form_2, $form_3, $form_4));
 
         //clear all cookies
         $cookie = cookie('page', null, -1);
@@ -231,8 +247,8 @@ class FormController extends Controller
         // Mail::to('admin@example.com')->send(new FormSubmitted($form));
 
         return redirect()->back()
-                    ->with('status', 'Berhasil mengisi form pendaftaran, silahkan cek email untuk melanjutkan proses berikutnya');
-                    // ->withCookies([$cookie, $cookie1, $cookie2, $cookie3, $cookie4, $cookie5]);    
+                    ->with('status', 'Berhasil mengisi form pendaftaran, silahkan cek email untuk melanjutkan proses berikutnya')
+                    ->withCookies([$cookie, $cookie1, $cookie2, $cookie3, $cookie4, $cookie5]);    
     }
 
     public function goToPage($page)
